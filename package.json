@@ -1,0 +1,45 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "page-loader": "bin/page-loader.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "npx jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilrosch/backend-project-4"
+  },
+  "author": "ilrosch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ilrosch/backend-project-4/issues"
+  },
+  "type": "module",
+  "homepage": "https://github.com/ilrosch/backend-project-4#readme",
+  "lint-staged": {
+    "*.js": "eslint --fix"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.7.0",
+    "@jest/globals": "^29.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "globals": "^15.8.0",
+    "jest": "^29.7.0",
+    "jest-cli": "^29.7.0",
+    "lint-staged": "^15.2.7",
+    "nock": "^13.5.6"
+  }
+}
