@@ -7,3 +7,5 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/41e0c671115fb341f594/test_coverage)](https://codeclimate.com/github/ilrosch/backend-project-4/test_coverage)
 
 [![asciicast](https://asciinema.org/a/66VDE0zTVxAs72lpg4YstpvMd.svg)](https://asciinema.org/a/66VDE0zTVxAs72lpg4YstpvMd)
+
+[![asciicast](https://asciinema.org/a/yyvceeLMUABVPKlY0EdPLq4mz.svg)](https://asciinema.org/a/yyvceeLMUABVPKlY0EdPLq4mz)
