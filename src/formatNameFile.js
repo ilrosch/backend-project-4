@@ -1,5 +1,8 @@
+import path from 'path';
+
 export default (url) => {
-  const name = `${url.hostname}${url.pathname}`;
-  const format = name.replace(/[/._]/g, '-');
-  return `${format}.html`;
+  const { hostname, pathname } = url;
+  const extname = path.extname(pathname) || '.html';
+  const formatPath = path.join(hostname, pathname.replace(extname, '')).replace(/[/._]/g, '-');
+  return `${formatPath}${extname}`;
 };

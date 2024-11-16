@@ -4,7 +4,8 @@ import nock from 'nock';
 import { fileURLToPath } from 'url';
 import os from 'os';
 import path from 'path';
-import fsp from 'fs/promises';
+import { constants } from 'fs';
+import { readFile, access, mkdtemp } from 'fs/promises';
 import {
   beforeAll, beforeEach, describe, expect, it,
 } from '@jest/globals';
@@ -17,30 +18,64 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const getFixturePath = (name) => path.join(__dirname, '..', '__fixtures__', name);
 
-const filename = 'ru-hexlet-io-test.html';
-
-let expected;
 let dirpath;
 
+const files = {
+  before: {
+    path: 'ru.hexlet.io-courses',
+    data: '',
+  },
+
+  after: {
+    path: 'ru-hexlet-io-courses.html',
+    data: '',
+  },
+
+  image: {
+    path: 'ru-hexlet-io-courses_files/ru-hexlet-io-assets-professions-nodejs.png',
+    data: '',
+  },
+
+  dir: {
+    path: 'ru-hexlet-io-courses_files',
+  },
+};
+
 beforeAll(async () => {
-  expected = await fsp.readFile(getFixturePath(filename), 'utf-8');
+  const pr1 = readFile(getFixturePath(files.before.path), 'utf-8');
+  const pr2 = readFile(getFixturePath(files.after.path), 'utf-8');
+  const pr3 = readFile(getFixturePath(files.image.path), 'utf-8');
+  const data = await Promise.all([pr1, pr2, pr3]);
+  [files.before.data, files.after.data, files.image.data] = data;
 });
 
 beforeEach(async () => {
-  dirpath = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
+  dirpath = await mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
 });
 
 describe('page-loader: ', () => {
-  it('should be loaded the page', async () => {
+  it('should be loaded the page and files', async () => {
     nock(/ru\.hexlet\.io/)
-      .get(/\/test/)
-      .reply(200, expected);
+      .get(/\/courses/)
+      .reply(200, files.before.data);
 
-    await loader('https://ru.hexlet.io/test', dirpath);
+    nock(/ru\.hexlet\.io/)
+      .get(/\/assets\/professions\/nodejs\.png/)
+      .reply(200, files.image.data);
 
-    const filepath = `${dirpath}/${filename}`;
-    const actual = await fsp.readFile(filepath, 'utf-8');
+    const pathHtmlFile = path.join(dirpath, files.after.path);
+    await expect(loader('https://ru.hexlet.io/courses', dirpath)).resolves.toBe(pathHtmlFile);
 
-    expect(actual).toBe(expected);
+    // html testing
+    const actualHtml = await readFile(pathHtmlFile, 'utf-8');
+    expect(actualHtml).toBe(files.after.data);
+
+    // directory for files
+    const pathFilesDir = path.join(dirpath, files.dir.path);
+    await expect(access(pathFilesDir, constants.F_OK)).resolves.toBeUndefined();
+
+    // image testing
+    const pathImageFile = path.join(dirpath, files.image.path);
+    await expect(access(pathImageFile, constants.F_OK)).resolves.toBeUndefined();
   });
 });
