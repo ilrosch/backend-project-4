@@ -1,5 +1,5 @@
-install: n
-	npm ci --legacy-peer-deps
+install:
+	npm ci
 
 test:
 	npm test

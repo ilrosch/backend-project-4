@@ -1,0 +1,25 @@
+name: Page-Loader
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+
+      - name: dependency installation
+        run: make install
+
+      - name: running linter
+        run: make lint
+
+      - name: running tests
+        run: make test
+
+      - name: test & publish code coverage
+        uses: paambaati/codeclimate-action@v5.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: make test-coverage
+          debug: true
