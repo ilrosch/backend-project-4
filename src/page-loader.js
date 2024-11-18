@@ -8,6 +8,8 @@ import formatNameFile from './formatNameFile.js';
 const fsp = fs.promises;
 
 const mapping = {
+  link: 'href',
+  script: 'src',
   img: 'src',
 };
 
@@ -22,31 +24,40 @@ export default (url, output) => {
       const downloadFiles = [];
       Object.entries(mapping).forEach(([tagName, tagAttr]) => (
         $(tagName).each((_i, element) => {
-          const serverURL = new URL(path.join(currentURL.origin, $(element).attr(tagAttr)));
+          const serverURL = new URL($(element).attr(tagAttr), currentURL.origin);
+
+          if (currentURL.hostname !== serverURL.hostname) {
+            return;
+          }
+
           const localPath = path.join(pathFilesDir, formatNameFile(serverURL));
           const fullLocalPath = path.join(output, localPath);
 
           $(element).attr(tagAttr, localPath);
 
-          downloadFiles.push({ server: serverURL.href, local: fullLocalPath });
+          downloadFiles.push({ type: tagName, server: serverURL.href, local: fullLocalPath });
         })
       ));
 
-      return { html: $.html(), downloadFiles };
+      const minifyHtml = $.html().split('\n').map((el) => el.trim()).join('');
+
+      return { html: minifyHtml, downloadFiles };
     })
     .then(({ html, downloadFiles }) => {
       fs.mkdir(path.join(output, pathFilesDir), () => { });
 
       const fullLocalPathHtml = path.join(output, htmlFileName);
       const prHtml = fsp.writeFile(fullLocalPathHtml, html);
-      const prFiles = downloadFiles.map(({ server, local }) => (
+      const prFiles = downloadFiles.map(({ type, server, local }) => (
         axios({
           method: 'get',
           url: server,
-          responseType: 'stream',
+          responseType: (type === 'img') ? 'stream' : 'json',
           validateStatus: (status) => status >= 200,
         })
-          .then(({ data }) => data.pipe(fs.createWriteStream(local)))
+          .then(({ data }) => (
+            (type === 'img') ? data.pipe(fs.createWriteStream(local)) : fsp.writeFile(local, data)
+          ))
       ));
 
       Promise.all([prHtml, ...prFiles]);
