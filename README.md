@@ -11,3 +11,5 @@
 [![asciicast](https://asciinema.org/a/yyvceeLMUABVPKlY0EdPLq4mz.svg)](https://asciinema.org/a/yyvceeLMUABVPKlY0EdPLq4mz)
 
 [![asciicast](https://asciinema.org/a/NIFlH3T5R6Fr5FE86EBHBabwt.svg)](https://asciinema.org/a/NIFlH3T5R6Fr5FE86EBHBabwt)
+
+[![asciicast](https://asciinema.org/a/yYZNCCpC4h3fFcWqaBwZZdorp.svg)](https://asciinema.org/a/yYZNCCpC4h3fFcWqaBwZZdorp)

@@ -15,7 +15,7 @@ program
         console.log(`Page was successfully loaded into ${path}`);
       })
       .catch((e) => {
-        console.error(`Error: ${e}`);
+        console.error(e);
         process.exit(1);
       });
   })
