@@ -39,7 +39,7 @@ const getResourcesPage = (html, currentURL, dirName) => {
   return { html: $.html(), resources: noRepeatResources };
 };
 
-export default (url, output) => {
+export default (url, output = process.cwd()) => {
   const currentURL = new URL(url);
   const resourcesList = [];
 
