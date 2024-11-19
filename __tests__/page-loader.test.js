@@ -49,4 +49,16 @@ describe('page-loader: ', () => {
     const actualData = await readFile(pathHTML, 'utf-8');
     expect(actualData).toBe(after);
   });
+
+  it('should be throw error: path to site', async () => {
+    nock(mock).get('/courses').reply(404);
+    await expect(loader(path.join(mock, '/courses'), currentDir)).rejects
+      .toThrowError('Cannot loading resource from https://ru.hexlet.io/courses');
+  });
+
+  it('should be throw error: path to dir', async () => {
+    nock(mock).get('/courses').reply(200, 'test');
+    await expect(loader(path.join(mock, '/courses'), '/undefined')).rejects
+      .toThrowError("no such file or directory, open '/undefined/ru-hexlet-io-courses.html");
+  });
 });

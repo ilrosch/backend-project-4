@@ -58,7 +58,11 @@ export default (url, output) => {
     })
     .then(() => {
       log(`Reading the root file ${pathRootHtml}`);
-      return fsp.readFile(pathRootHtml, 'utf-8');
+      return fsp.readFile(pathRootHtml, 'utf-8')
+        .catch((e) => {
+          log(`Error reading the file ${pathRootHtml}!`);
+          throw new Error(`Cannot reading file ${pathRootHtml}, => ${e}`);
+        });
     })
     .then((data) => {
       log('Get other resourse for page and change paths');
@@ -66,9 +70,18 @@ export default (url, output) => {
     })
     .then(({ html, resources }) => {
       log('Loading other resourse for page');
-      const prHTML = fsp.writeFile(pathRootHtml, html);
+      const prHTML = fsp.writeFile(pathRootHtml, html)
+        .catch((e) => {
+          log(`Error writing the file ${pathRootHtml}!`);
+          throw new Error(`Cannot writing file ${pathRootHtml}, => ${e}`);
+        });
+
       const prResources = resources.map(({ server, local }) => loadResource(server, local));
-      return Promise.all([prHTML, ...prResources]);
+      return Promise.all([prHTML, ...prResources])
+        .catch((e) => {
+          log('Error loading resources!');
+          throw new Error(`Cannot loading resources, => ${e}`);
+        });
     })
     .then(() => {
       log('Finish loading page!');

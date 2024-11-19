@@ -11,9 +11,12 @@ export default (serverURL, localURL) => {
     method: 'get',
     url: serverURL,
     responseType: 'stream',
-    validateStatus: (status) => status >= 200,
+    validateStatus: (status) => status === 200,
   })
     .then(({ data }) => pipeline(data, fs.createWriteStream(localURL)))
     .then(() => log('Finish loading resource!'))
-    .catch((e) => { throw e; });
+    .catch((e) => {
+      log(`Error loading resource from ${serverURL}!`);
+      throw new Error(`Cannot loading resource from ${serverURL}, => ${e}`);
+    });
 };

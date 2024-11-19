@@ -39,4 +39,10 @@ describe('loadResource', () => {
     const actualData = await readFile(localURL, 'utf-8');
     expect(actualData).toBe(currentData);
   });
+
+  it('should be throw error', async () => {
+    nock(mock).get('/courses').reply(404);
+    await expect(loadResource(path.join(mock, '/courses'), currentDir)).rejects
+      .toThrowError('Cannot loading resource from https:/ru.hexlet.io/courses');
+  });
 });
