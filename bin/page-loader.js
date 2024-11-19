@@ -15,7 +15,7 @@ program
         console.log(`Page was successfully loaded into ${path}`);
       })
       .catch((e) => {
-        console.error(e);
+        console.error('Unsuccessful page loading:', e);
         process.exit(1);
       });
   })
