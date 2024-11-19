@@ -35,7 +35,7 @@ beforeEach(async () => {
   currentDir = await mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
 });
 
-describe('page-loader: ', () => {
+describe('page-loader:', () => {
   it('should be loaded page', async () => {
     nock(mock).get('/courses').reply(200, before);
     nock(mock).get('/courses').reply(200, '');
@@ -53,12 +53,12 @@ describe('page-loader: ', () => {
   it('should be throw error: path to site', async () => {
     nock(mock).get('/courses').reply(404);
     await expect(loader(path.join(mock, '/courses'), currentDir)).rejects
-      .toThrowError('Cannot loading resource from https://ru.hexlet.io/courses');
+      .toThrow('Cannot loading resource from https://ru.hexlet.io/courses');
   });
 
   it('should be throw error: path to dir', async () => {
     nock(mock).get('/courses').reply(200, 'test');
     await expect(loader(path.join(mock, '/courses'), '/undefined')).rejects
-      .toThrowError("no such file or directory, open '/undefined/ru-hexlet-io-courses.html");
+      .toThrow("no such file or directory, open '/undefined/ru-hexlet-io-courses.html");
   });
 });

@@ -43,6 +43,6 @@ describe('loadResource', () => {
   it('should be throw error', async () => {
     nock(mock).get('/courses').reply(404);
     await expect(loadResource(path.join(mock, '/courses'), currentDir)).rejects
-      .toThrowError('Cannot loading resource from https:/ru.hexlet.io/courses');
+      .toThrow('Cannot loading resource from https:/ru.hexlet.io/courses');
   });
 });
